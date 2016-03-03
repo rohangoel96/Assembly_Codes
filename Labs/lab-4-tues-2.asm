@@ -18,7 +18,7 @@ text1 db "Enter User Name","$"
 text2 db "Enter Passowrd","$"
 text3 db "Hello User","$"
 newline db 0ah,0dh,'$'
-userAllowed db "rohan"
+userAllowed db "irohangoel"
 max1 db 11
 act1 db ?
 userEntered db 33 dup("?")
@@ -43,7 +43,7 @@ passwordEntered db 8 dup("?")
 	cld
 	lea si, userAllowed
 	lea di, userEntered
-	movzx cx, act1
+	movzx cx, max1
 	
 	repe cmpsb
 	cmp cx, 00h
