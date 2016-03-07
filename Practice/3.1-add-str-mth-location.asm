@@ -1,4 +1,8 @@
-;add "????" after every mth location
+;n 32-bit data are stored starting from memory location dat1.
+;Write an ALP that will insert the string “????”  after every mth  double word 
+;The value of m can range between 2 to 4 and is stored in location off1. 
+;The value of n is between 10d to 120d and is stored in location cnt1. 
+;The size n need not be a multiple of m
 
 .model tiny
 .486 
