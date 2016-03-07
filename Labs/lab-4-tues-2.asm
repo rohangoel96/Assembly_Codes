@@ -16,16 +16,18 @@
 .data
 text1 db "Enter User Name","$"
 text2 db "Enter Passowrd","$"
-text3 db "Hello User","$"
-newline db 0ah,0dh,'$'
-userAllowed db "irohangoel"
+newline db 0dh,0ah,'$'
+text3 db "Hello "
+userAllowed db "irohangoel","$"
 max1 db 11
 act1 db ?
 userEntered db 33 dup("?")
-passwordAllowed db "mypasswo"
+passwordAllowed db "mypasswo","$"
 act2 db 8
 passwordEntered db 8 dup("?")
-
+wronguser db "[Error] Wrong Username", "$"
+wrongpass db "[Error] Wrong Password", "$"
+text4 db ", try again with : ","$"
 .code
 .startup
 	lea dx, text1
@@ -48,6 +50,16 @@ passwordEntered db 8 dup("?")
 	repe cmpsb
 	cmp cx, 00h
 	je x1
+
+	lea dx, wronguser
+	mov ah, 09h
+	int 21h
+	lea dx, text4
+	mov ah, 09h
+	int 21h
+	lea dx, userAllowed
+	mov ah, 09h
+	int 21h
 	mov ah,4Ch
 	int 21h
 
@@ -81,6 +93,19 @@ x3:
 	repe cmpsb
 	cmp cx, 00h
 	je x2
+
+	lea dx, newline
+	mov ah, 09h
+	int 21h
+	lea dx, wrongpass
+	mov ah, 09h
+	int 21h
+	lea dx, text4
+	mov ah, 09h
+	int 21h
+	lea dx, passwordAllowed
+	mov ah, 09h
+	int 21h
 	mov ah,4Ch
 	int 21h	
 	
