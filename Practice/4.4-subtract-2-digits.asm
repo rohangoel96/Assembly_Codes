@@ -20,7 +20,7 @@
 	int 21h
 
 	sub bl, al
-	add bl, 30h
+	add bl, 30h ;number will be entered as ASCII, convert to decimal
 	
 	mov dl, '"'
 	mov ah, 02h

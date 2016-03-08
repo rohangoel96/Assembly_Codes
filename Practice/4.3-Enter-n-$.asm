@@ -13,7 +13,7 @@
 .startup
 	mov ah, 08h
 	int 21h
-	sub al, 30h
+	sub al, 30h ;number will be entered as ASCII, convert to decimal
 	movzx cx, al
 	mov dl, "$"
 
