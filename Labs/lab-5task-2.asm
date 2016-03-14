@@ -1,7 +1,10 @@
+;To the file resulting from Task1, append your hostel name 
+;and room number. Close the file in the end.
+
 .model tiny
 .486 
 .data
-	filename db "rohan.txt", 0
+	filename db "rohan.txt", 0 ;this 0 is very imp
 	handle dw ?
 	data db 0dh, 0ah, "AH1 244$"
 .code
