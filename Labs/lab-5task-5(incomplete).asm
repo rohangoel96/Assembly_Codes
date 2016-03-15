@@ -4,6 +4,10 @@
 ;the file and deleting it, changing its
 ;attributes date of creation & time.
 
+
+;;;;;;;;;;;;;;;;;;;; CHECK IN WINDOWS  ;;;;;;;;;;;;;;;; DOESN'T WORK
+
+
 .model tiny
 .486 
 .data
