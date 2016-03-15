@@ -28,9 +28,8 @@ x1:	mov ah, 3fh
 	mov dx, si
 	int 21h
 
-	mov al, [si]
+	cmp ax, 0000h ;If AX = 0 or AX < CX, EOF
 	inc si
-	cmp al, 00h ;compare with null ; 3eh also works
 	jnz x1
 
 	;close the file
