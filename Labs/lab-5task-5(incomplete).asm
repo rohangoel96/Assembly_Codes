@@ -1,92 +1,95 @@
-;Create a new file and write your name and ID. No. in it. 
-;Use keyboard to input the data. Hint: Use
-;dos function 0Ah for input from keyboard. Also try renaming
-;the file and deleting it, changing its
-;attributes date of creation & time.
-
-
-;;;;;;;;;;;;;;;;;;;; CHECK IN WINDOWS  ;;;;;;;;;;;;;;;; DOESN'T WORK
-
-
 .model tiny
 .486 
 .data
-	tempfilename db "temp.txt", 0 ;this 0 is very imp
+	filename db "temp.txt",0
 	handle dw ?
-	text1 db "Enter the data: ","$"
-	newline db 0dh, 0ah, "$"
-	max1 db 20d
+	newline db 0dh, 0Ah, "$" 
+	max1 db 20
 	act1 db ?
-	textentered db 21 dup ("?")
-
-	text2 db "Enter the file name you want to save it as (eg : newfile.txt)","$"
-	max2 db 20d
+	nameentered db 21 dup("$")
+	max2 db 20
 	act2 db ?
-	filenameentered db 30 dup(0)
+	identered db 21 dup("$")
+	max3 db 13
+	act3 db ?
+	newfilename db 13 dup(0)
+	text1 db "Enter the name: ",0dh, 0Ah,"$"
+	text2 db "Enter the id: ",0dh, 0Ah,"$"
+	text3 db "Enter the filename: ",0dh, 0Ah,"$"
 .code
 .startup
+	;create file
+	mov ah, 3ch
+	lea dx, filename
+	mov cl , 00100000b
+	int 21h
+	mov handle, ax
+	
+	;input the name and id
 	lea dx, text1
 	mov ah,09h
 	int 21h
 	
-	lea dx, newline
-	mov ah,09h
-	int 21h
-	
-	;input text to be written
 	lea dx, max1
 	mov ah, 0Ah
 	int 21h
-
-	;open new file
-	mov ah, 3ch
-	lea dx, tempfilename
-	mov cl, 00100000b
-	int 21h
-	mov handle, ax
-
-	;write to that file
-	mov ah, 40h
-	mov bx, handle
-	movzx cx, act1
-	lea dx, textentered
-	int 21h
-
-	;print text2
+	
 	lea dx, newline
-	mov ah,09h
+	mov ah, 09h
 	int 21h
-
+	
 	lea dx, text2
 	mov ah,09h
 	int 21h
-
-	lea dx, newline
-	mov ah,09h
-	int 21h
-
-	;input new file name
+	
 	lea dx, max2
 	mov ah, 0Ah
 	int 21h
-
-	;VERY IMP, last nibble is 0dh when entering, make that 0 as ASCIZ
-	;correcting the filename
-	lea si, filenameentered
-	mov bl, act2
-	mov bh ,00h
-	mov [si+bx] ,bh
-
-	;rename the temp file
-	mov ah, 56h
-	lea dx, tempfilename
-	lea di, filenameentered
-	mov cl, 00100000b
+	
+	;write to the file
+	mov ah, 40h
+	mov bx, handle
+	movzx cx, act1
+	lea dx, nameentered
 	int 21h
-
-	;close the file
+	
+	mov ah, 40h
+	mov bx, handle
+	mov cx, 2d
+	lea dx, newline
+	int 21h
+	
+	mov ah, 40h
+	mov bx, handle
+	movzx cx, act2
+	lea dx, identered
+	int 21h
+	
+	;input filename
+	lea dx, text3
+	mov ah,09h
+	int 21h
+	
+	lea dx, max3
+	mov ah, 0Ah
+	int 21h
+	
+	;CORRECT FILE NAME
+	lea si, newfilename
+	mov bl, act3
+	mov bh, 00h
+	mov [si+bx], bh
+	
+	;close the file before RENAMING
 	mov ah, 3eh
 	mov bx, handle
+	int 21h
+	
+	;rename the file
+	mov ah, 56h
+	lea dx, filename
+	lea di, newfilename
+	mov cl, 00100000b
 	int 21h
 .exit 
 end
