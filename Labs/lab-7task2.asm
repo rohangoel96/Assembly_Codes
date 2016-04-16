@@ -1,7 +1,6 @@
-.model	tiny
+.model tiny
 .486
 .data
-	text db " " 
 .code
 .startup
 	;set video mode
@@ -9,92 +8,81 @@
 	mov al, 03h
 	int 10h
 
-	;color first half
-	mov dh, 0
-	
-x2:	mov ah, 09h
-	mov al, text
+	;color upper half
+	mov ah, 09h
+	mov al, " "
 	mov bh, 0
 	mov bl, 00011110b
-	mov cx, 80
+	mov cx, 960
 	int 10h
-		
-		;move the cursor for next line
+
+	;color lower half
+		;move to 13th row
 		mov ah, 02h
-		;dh handled by loop
-		mov dl, 0 
-		mov bh, 00
+		mov dh, 12 ;row
+		mov dl, 0 ;column
+		mov bh, 0
 		int 10h
-				
-	inc dh
-	cmp dh, 13
-	jnz x2
-	
-	;color second half
-	mov dh, 13
-	
-x3:	mov ah, 09h
-	mov al, text
+	mov ah, 09h
+	mov al, " "
 	mov bh, 0
 	mov bl, 01111010b
-	mov cx, 80
+	mov cx, 1040
 	int 10h
-		
-		;move the cursor for next line
-		mov ah, 02h
-		;dh handled by loop
-		mov dl, 0 
-		mov bh, 00
-		int 10h
-		
-	inc dh
-	cmp dh, 25
-	jnz x3
 
+	mov dl, 0 ;handle column for typing
 
-	;text typing
-	mov dl, 0
-
-x4:	mov ah, 01h
+more:
+	;char input
+	mov ah, 08h
 	int 21h
 
-	mov ah, 02h
-	mov dh, 0
-	;dl handled above
-	mov bh, 0
-	int 10h
+	;typing in 1st half
+x2:	mov dh, 00
 
-	mov ah, 09h
-	;al handled
-	mov bh, 0
-	mov bl, 00011110b
-	mov cx, 1
-	int 10h
+		;correct position
+		mov ah, 02h
+		;dh row handled
+		;dl column handled
+		mov bh, 0
+		int 10h
 
-		;type in second window
-	mov ah, 02h
+		;type
+		mov ah, 09h
+		;al (char to be typed) handled above
+		mov bh, 0
+		mov bl, 00011110b
+		mov cx, 1
+		int 10h
+
+	;typing in 2nd half
 	mov dh, 12
-	;dl handled above
-	mov bh, 0
-	int 10h
 
-	mov ah, 09h
-	;al handled
-	mov bh, 0
-	mov bl, 01111010b
-	mov cx, 1
-	int 10h
+		;correct position
+		mov ah, 02h
+		;dh row handled
+		;dl column handled
+		mov bh, 0
+		int 10h
+		
+		;type
+		mov ah, 09h
+		;al (char to be typed) handled above
+		mov bh, 0
+		mov bl, 01111010b
+		mov cx, 1
+		int 10h
 
+	;handle more characters
 	inc dl
-	;check for end
-	cmp al, "$"
-	jnz x4
-
-	mov ah, 01h
-	int 21h
-	cmp al, '#'
-	jnz x4
-
 	
+	cmp al, "$"
+	jnz more
+
+	mov ah, 08h
+	int 21h
+	cmp al, "#"
+	jnz x2 
+
 .exit
 end
